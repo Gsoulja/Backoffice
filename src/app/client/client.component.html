@@ -1,0 +1,81 @@
+<div>{{ appState$ | async | json}}</div>
+<div class="container-xl">
+  <section id="addUser" class="split left ">
+    <div *ngIf="!category" class="row justify-content-md-center">
+
+      <Div id="pickCat" class="centered">
+        <div class="col">
+          <a type="button" (click)="getCategory('Levantamento/Deposito')"
+            class="btn btn-primary btn-lg w-100">Levantamento/Deposito</a>
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+          <a type="button" (click)="getCategory('Abri Conta')" class="btn btn-primary btn-lg w-100">Abri Conta</a>
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+          <a type="button" (click)="getCategory('Falar com Gestor')" class="btn btn-primary btn-lg w-100">Falar com
+            Gestor</a>
+        </div>
+      </Div>
+    </div>
+    <div *ngIf="category" class="row ">
+      <div id="addForm" class="centered">
+        <form #queueForm="ngForm" (ngSubmit)="addUser(queueForm)">
+          <div class="mb-3">
+            <label for="nomeimput" class="form-label">Nome</label>
+            <input type="text" ngModel name="name" class="form-control" id="nomeimput">
+          </div>
+          <div class="mb-3">
+            <label for="telimput" class="form-label">Telefone</label>
+            <input type="text" ngModel name="tel" class="form-control" id="telimput">
+            <div id="telHelp" class="form-text">Nâo iremos partilhar o seu numero com ninguem </div>
+          </div>
+          <button type="submit" [disabled]="queueForm.invalid || (isLoading$ | async )"
+            class="btn btn-primary form-control">Entrar na Fila</button>
+          <a type="button" *ngIf="!(isLoading$ | async)" (click)="getCategory('')"
+            class="btn btn-danger form-control ">Voltar</a>
+
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="manageQueue" class="split right">
+   
+    <div class="row justify-content-md-center">
+      <ng-container *ngIf="(appState$ | async) as appState" [ngSwitch]="appState.dataState"> 
+      <ng-container *ngSwitchCase="DataState.LOADED"> 
+        <div class="centered">
+        <h3>
+          Fila de Espera 
+          
+        </h3>
+      <table class="table  table-dark ">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+       
+          </tr>
+        </thead>
+        <tbody *ngFor="let queue of appState.appData.data.queues; let i = index" >
+          <tr>
+            <th scope="row">{{queue.id}}</th>
+            <td>{{queue.name}}</td>
+            
+            
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </ng-container>
+        <ng-container *ngSwitchCase="DataState.LOADING"> 
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          </ng-container>
+          </ng-container>
+    </div>
+  </section>
+</div>

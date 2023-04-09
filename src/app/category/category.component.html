@@ -1,0 +1,95 @@
+<div>{{ appState$ | async | json}}</div>
+
+<button style="margin: 50px; padding: 10px" type="button" class="btn btn-primary" (click)="openPopup('add')">Adicionar
+    Categoria
+</button>
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Adicionar Categoria</h4>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="category" class="row justify-content-md-center">
+                <form  #categoryForm="ngForm" (ngSubmit)="addCategory(categoryForm)" >
+                    <div class="mb-3" >
+                        <label for="exampleInputEmail1" class="form-label">Nome da Categoria</label>
+                        <input type="text" class="form-control"  ngModel name="name" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      
+                    </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-danger" (click)="closePopup()">
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </div>
+                    
+                    
+                </form>
+                </div>
+                <div *ngIf="!category" class="row justify-content-md-center">
+                    <form>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Nome da Categoria</label>
+                            <input type="text" class="form-control"  id="exampleInputEmail1" aria-describedby="emailHelp">
+                          
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Seleciona o Estado da Categoria</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Activo</option>
+                                <option value="1">Desativo</option>
+                              </select>
+                          
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-danger" (click)="closePopup()">
+                                Close
+                            </button>
+                            <button type="submit" class="btn btn-primary">Adicionar</button>
+                        </div>
+                        
+                        
+                    </form>
+                    </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-md-center">
+    <ng-container *ngIf="(appState$ | async) as appState" [ngSwitch]="appState.dataState"> 
+    <ng-container *ngSwitchCase="DataState.LOADED"> 
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome da Categoria </th>
+            <th scope="col">Estado</th>
+            <th scope="col">Ação</th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let category of appState.appData.data.categorys; let i = index">
+        <tr>
+            <th scope="row">{{category.id}}</th>
+            <td>{{category.name}}</td>
+            <td>{{category.status}}</td>
+            <td>
+                <button type="button" class="btn btn-link btn-sm btn-rounded" (click)="openPopup('')">
+                    Edit
+                </button>
+            </td>
+        </tr>
+        
+    </tbody>
+</table>
+</ng-container>
+<ng-container *ngSwitchCase="DataState.LOADING"> 
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  </ng-container>
+  </ng-container>
+</div>
